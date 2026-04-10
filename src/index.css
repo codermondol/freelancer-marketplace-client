@@ -6,6 +6,8 @@
   name: "light";
   default: true;
   --color-primary: #4f46e5;
+  --color-secondary: #0a5400;
+  --color-white: #ffffff;
 }
 :root {
   font-family: "IBM Plex Sans", sans-serif;
