@@ -105,7 +105,7 @@ const Jobs = () => {
 
               {/* Bid Button */}
               <Link
-                to={`/job/${job._id}`}
+                to={`/jobs/${job._id}`}
                 className="px-5 py-2 border-2 border-gray-800 text-gray-800 text-sm font-semibold rounded-lg hover:bg-gray-800 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Bid Job

@@ -10,6 +10,7 @@ import MyAcceptTasks from "../pages/myaccepttasks/MyAcceptTasks";
 import PrivateRoute from "./PrivateRoute";
 import Category from "../pages/Category/Category";
 import Jobs from "../pages/Jobs/Jobs";
+import JobDetails from "../pages/Jobs/JobDetails";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ export const router = createBrowserRouter([
         path: "/jobs",
         loader: () => fetch("http://localhost:3000/alljobs"),
         Component: Jobs,
+      },
+      {
+        path: '/jobs/:id',
+        loader: ({params}) => fetch(`http://localhost:3000/alljobs/${params.id}`),
+        Component: JobDetails
       },
       {
         path: "/contact",
