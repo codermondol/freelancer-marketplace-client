@@ -5,6 +5,10 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
+import MyAddedJobs from "../pages/myaddedjobs/MyAddedjobs";
+import MyAcceptTasks from "../pages/myaccepttasks/MyAcceptTasks";
+import PrivateRoute from "./PrivateRoute";
+import Category from "../pages/Category/Category";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +35,19 @@ export const router = createBrowserRouter([
         {
             path: '/contact',
             Component: Contact
+        },
+        {
+            path: '/categories/:id',
+            loader: ({ params }) => fetch(`http://localhost:3000/categories/${params.id}`),
+            Component: Category
+        },
+        {
+            path: '/myaddedjobs',
+            element: <PrivateRoute><MyAddedJobs></MyAddedJobs></PrivateRoute>
+        },
+        {
+            path: '/myaccepttasks',
+            element: <PrivateRoute><MyAcceptTasks></MyAcceptTasks></PrivateRoute>
         }
     ]
   },
