@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import {
   MapPin,
@@ -13,10 +13,21 @@ import {
   IdCard,
   Star,
 } from "lucide-react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const JobDetails = () => {
   const jobData = useLoaderData();
   const [liked, setLiked] = useState(false);
+  const jobModalRef = useRef(null);
+  const {user} = use(AuthContext)
+
+  const handleJobModalOpen = () => {
+    jobModalRef.current.showModal();
+  };
+
+  const handleJobSubmit = (e) => {
+    e.preventDefault();
+  };
 
   const {
     title = "Junior Graphic Designer",
@@ -34,9 +45,7 @@ const JobDetails = () => {
     careerLevel = "Officer",
     jobLocation = "New York",
     description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.",
-    employer = {},
   } = jobData || {};
-
 
   return (
     <div className="bg-white min-h-screen">
@@ -118,9 +127,43 @@ const JobDetails = () => {
               </span>
             </p>
 
-            <button className="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg transition-colors">
+            <button
+              onClick={handleJobModalOpen}
+              className="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg transition-colors"
+            >
               Apply Now
             </button>
+
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+            <dialog
+              ref={jobModalRef}
+              className="modal modal-bottom sm:modal-middle"
+            >
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">
+                  Offer something seller can not resist
+                </h3>
+                <form onSubmit={handleJobSubmit}>
+                  <fieldset className="fieldset">
+                    <label className="label">Name</label>
+                    <input type="text" className="input" readOnly defaultValue={user?.displayName || ""} />
+                    <label className="label">Password</label>
+                    <input
+                      type="password"
+                      className="input"
+                      placeholder="Password"
+                    />
+                  </fieldset>
+                </form>
+                <div className="modal-action">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
 
             <p className="text-gray-900 font-bold text-xl">
               {salary}
@@ -177,8 +220,6 @@ const JobDetails = () => {
           </h2>
           <p className="text-gray-600 leading-relaxed">{description}</p>
         </div>
-
-       
       </section>
     </div>
   );
@@ -203,9 +244,7 @@ const EmployerRow = ({ label, value, bold, isLast }) => (
     }`}
   >
     <span className="text-gray-500 text-sm">{label}</span>
-    <span
-      className={`text-sm text-gray-900 ${bold ? "font-semibold" : ""}`}
-    >
+    <span className={`text-sm text-gray-900 ${bold ? "font-semibold" : ""}`}>
       {value || ""}
     </span>
   </div>
