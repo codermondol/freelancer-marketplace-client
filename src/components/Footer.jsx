@@ -4,7 +4,7 @@ import { Link } from "react-router";
 const Footer = () => {
   return (
     <footer className="bg-neutral text-neutral-content">
-      <div className="w-10/12 mx-auto py-12">
+      <div className="w-[1440px] max-w-full mx-auto py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Navigation */}
@@ -105,7 +105,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <div className="border-t border-neutral-content/10">
-        <div className="w-10/12 mx-auto py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-neutral-content/50">
+        <div className="w-[1440px] max-w-full mx-auto py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-neutral-content/50">
           <p>&copy; {new Date().getFullYear()} FreelancerHub. All rights reserved.</p>
           <p>Built with ❤️ for freelancers worldwide</p>
         </div>
