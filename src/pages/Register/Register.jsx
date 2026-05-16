@@ -1,184 +1,241 @@
-import React, { use, useState } from "react";
-import registerImg from "./../../assets/register-img.png";
-import logo from "./../../assets/react.svg";
-import { Link } from "react-router";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { Eye, EyeOff, Loader2, UserPlus } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuth } from '../../contexts/AuthContext';
 
-const EyeIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
+const GoogleIcon = () => (
+  <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
+    <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.8 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.2 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+    <path fill="#4CAF50" d="M24 44c5.1 0 9.8-1.9 13.3-5.1l-6.1-5c-2 1.4-4.5 2.1-7.2 2.1-5.3 0-9.7-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
+    <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.2 5.8l6.1 5C40.9 35.4 44 30.1 44 24c0-1.2-.1-2.4-.4-3.5z"/>
   </svg>
 );
 
-const EyeOffIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
-    <line x1="1" y1="1" x2="23" y2="23"/>
-  </svg>
-);
+const validatePassword = (password) => {
+  if (password.length < 6) return 'Password must be at least 6 characters long.';
+  if (!/[A-Z]/.test(password)) return 'Password must include at least one uppercase letter.';
+  if (!/[a-z]/.test(password)) return 'Password must include at least one lowercase letter.';
+  return '';
+};
 
 const Register = () => {
-  const { createUser, signInWithGoogle, updateUserProfile } = use(AuthContext);
+  const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    photoURL: '',
+    password: '',
+  });
 
-  const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then((result) => {
-        const newUser = {
-          name: result.user.displayName,
-          email: result.user.email,
-          image: result.user.photoURL,
-        };
-        return fetch("http://localhost:3000/users", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(newUser),
-        });
-      })
-      .catch((error) => console.log(error));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === 'password') {
+      setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const firstName = form.firstName.value;
-    const lastName = form.lastName.value;
-    const photoURL = form.photoURL.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const fullName = `${firstName} ${lastName}`.trim();
+    const pwdError = validatePassword(form.password);
+    if (pwdError) {
+      setErrors({ password: pwdError });
+      toast.error(pwdError);
+      return;
+    }
+    if (!form.name.trim() || !form.email.trim()) {
+      toast.error('Name and email are required.');
+      return;
+    }
 
-    createUser(email, password)
-      .then((result) => {
-        return updateUserProfile(fullName, photoURL).then(() => result);
-      })
-      .then((result) => {
-        const newUser = {
-          name: fullName,
-          email: result.user.email,
-          image: photoURL,
-        };
-        return fetch("http://localhost:3000/users", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(newUser),
-        });
-      })
-      .catch((error) => console.log(error));
+    setSubmitting(true);
+    try {
+      await createUser(form.email, form.password);
+      await updateUserProfile(
+        form.name,
+        form.photoURL ||
+          `https://ui-avatars.com/api/?background=6d28d9&color=fff&name=${encodeURIComponent(form.name)}`
+      );
+      toast.success('Account created successfully!');
+      navigate('/', { replace: true });
+    } catch (err) {
+      toast.error(err?.message?.replace('Firebase:', '').trim() || 'Registration failed.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setSubmitting(true);
+    try {
+      await signInWithGoogle();
+      toast.success('Signed in with Google.');
+      navigate('/', { replace: true });
+    } catch (err) {
+      toast.error(err?.message?.replace('Firebase:', '').trim() || 'Google sign-in failed.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
-      <div className="bg-secondary w-full lg:w-1/2 flex justify-center items-center p-4">
+    <section className="container-fm grid min-h-[calc(100vh-4rem)] grid-cols-1 items-center gap-10 py-10 lg:grid-cols-2">
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="hidden flex-col gap-6 lg:flex"
+      >
+        <span className="chip-fm w-fit">Join the marketplace</span>
+        <h1 className="heading-fm text-4xl lg:text-5xl">
+          Build your reputation. <span className="text-gradient">Earn on your own terms.</span>
+        </h1>
+        <p className="max-w-md text-base leading-relaxed text-muted">
+          Create your free account to bid on projects, showcase your portfolio, and grow a sustainable freelance career.
+        </p>
         <img
-          src={registerImg}
-          alt=""
-          className="max-h-[60vh] lg:max-h-[80%] object-contain"
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=70&auto=format&fit=crop"
+          alt="Team collaborating"
+          className="aspect-[5/4] w-full rounded-3xl object-cover shadow-2xl shadow-[rgb(var(--fm-primary))]/20"
         />
-      </div>
+      </motion.div>
 
-      <div className="w-full lg:w-1/2 p-4 flex justify-center items-center">
-        <div className="text-center space-y-3 w-full max-w-md">
-          <div className="flex justify-center items-center">
-            <img src={logo} alt="" className="max-h-[40vh] lg:max-h-[60%] object-contain" />
-          </div>
-          <h4 className="text-xl">Welcome to FreelancerHub</h4>
-          <h2 className="text-4xl font-bold">Register Account</h2>
-
-          <div>
-            <form onSubmit={handleSubmit}>
-              <fieldset className="fieldset space-y-2 text-left">
-                {/* First & Last Name */}
-                <div className="flex gap-2">
-                  <div className="w-1/2">
-                    <label className="label">First Name</label>
-                    <input type="text" name="firstName" className="input w-full" placeholder="First Name" />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="label">Last Name</label>
-                    <input type="text" name="lastName" className="input w-full" placeholder="Last Name" />
-                  </div>
-                </div>
-
-                {/* Image URL */}
-                <div>
-                  <label className="label">Image URL</label>
-                  <input type="text" name="photoURL" className="input w-full" placeholder="Profile Image URL" />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="label">Email</label>
-                  <input type="email" name="email" className="input w-full" placeholder="Email" />
-                </div>
-
-                {/* Password */}
-                <div>
-                  <label className="label">Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      className="input w-full pr-10"
-                      placeholder="Password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Confirm Password */}
-                <div>
-                  <label className="label">Confirm Password</label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      className="input w-full pr-10"
-                      placeholder="Confirm Password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Terms Checkbox */}
-                <div className="flex items-center gap-2 mt-2">
-                  <input type="checkbox" className="checkbox checkbox-sm" />
-                  <span className="text-sm">
-                    I agree to the{" "}
-                    <a className="link link-primary">Terms & Conditions</a>
-                  </span>
-                </div>
-
-                <button className="btn btn-neutral mt-4 w-full">Create Account</button>
-              </fieldset>
-            </form>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mx-auto w-full max-w-md"
+      >
+        <div className="card-fm p-7 sm:p-8">
+          <div className="mb-6">
+            <h2 className="heading-fm text-2xl">Create your account</h2>
+            <p className="mt-1 text-sm text-muted">
+              It only takes a minute. No card required.
+            </p>
           </div>
 
-          <button onClick={handleGoogleSignIn} className="btn bg-white text-black border-[#e5e5e5] w-full">
-            <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
-            Login with Google
+          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+            <div>
+              <label htmlFor="name" className="mb-1 block text-sm font-medium">
+                Full name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Jane Doe"
+                className="input-fm"
+                autoComplete="name"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="mb-1 block text-sm font-medium">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="input-fm"
+                autoComplete="email"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="photoURL" className="mb-1 block text-sm font-medium">
+                Photo URL <span className="text-xs text-muted">(optional)</span>
+              </label>
+              <input
+                id="photoURL"
+                name="photoURL"
+                type="url"
+                value={form.photoURL}
+                onChange={handleChange}
+                placeholder="https://i.imgur.com/your-photo.png"
+                className="input-fm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-1 block text-sm font-medium">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="At least 6 chars, one A-Z and one a-z"
+                  className="input-fm pr-12"
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted transition hover:text-app"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-xs font-medium text-red-500">{errors.password}</p>
+              )}
+              <p className="mt-1 text-xs text-muted">
+                Must contain an uppercase letter, a lowercase letter, and be at least 6 characters.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn-fm btn-fm-primary w-full"
+            >
+              {submitting ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
+              {submitting ? 'Creating account…' : 'Register'}
+            </button>
+          </form>
+
+          <div className="my-5 flex items-center gap-3 text-xs text-muted">
+            <span className="h-px flex-1 bg-[rgb(var(--fm-border))]" />
+            OR
+            <span className="h-px flex-1 bg-[rgb(var(--fm-border))]" />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={submitting}
+            className="btn-fm btn-fm-ghost w-full"
+          >
+            <GoogleIcon /> Continue with Google
           </button>
 
-          <div className="mt-2">
-            <p>Already have an account? <Link to="/login"><span className="font-bold underline">Login Now</span></Link></p>
-          </div>
+          <p className="mt-6 text-center text-sm text-muted">
+            Already on SkillForge?{' '}
+            <Link to="/login" className="font-semibold text-[rgb(var(--fm-primary))] hover:underline">
+              Login here
+            </Link>
+          </p>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </section>
   );
 };
 

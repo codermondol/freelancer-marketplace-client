@@ -1,75 +1,77 @@
-import { createBrowserRouter } from "react-router";
-import root from "../root/root";
-import Home from "../pages/home/home";
-import Login from "../pages/Login/Login";
-import Register from "../pages/Register/Register";
-import About from "../pages/About/About";
-import Contact from "../pages/Contact/Contact";
-import MyAddedJobs from "../pages/myaddedjobs/MyAddedjobs";
-import MyAcceptTasks from "../pages/myaccepttasks/MyAcceptTasks";
-import PrivateRoute from "./PrivateRoute";
-import Category from "../pages/Category/Category";
-import Jobs from "../pages/Jobs/Jobs";
-import JobDetails from "../pages/Jobs/JobDetails";
+import { createBrowserRouter } from 'react-router';
+import Root from '../root/root';
+import Home from '../pages/home/Home';
+import Login from '../pages/Login/Login';
+import Register from '../pages/Register/Register';
+import AllJobs from '../pages/Jobs/AllJobs';
+import JobDetails from '../pages/Jobs/JobDetails';
+import AddJob from '../pages/Jobs/AddJob';
+import UpdateJob from '../pages/Jobs/UpdateJob';
+import DeleteJob from '../pages/Jobs/DeleteJob';
+import MyAddedJobs from '../pages/myaddedjobs/MyAddedJobs';
+import MyAcceptedTasks from '../pages/myaccepttasks/MyAcceptedTasks';
+import ErrorPage from '../pages/ErrorPage/ErrorPage';
+import PrivateRoute from './PrivateRoute';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    Component: root,
+    path: '/',
+    Component: Root,
+    errorElement: <ErrorPage />,
     children: [
+      { index: true, Component: Home },
+      { path: 'login', Component: Login },
+      { path: 'register', Component: Register },
+      { path: 'allJobs', Component: AllJobs },
       {
-        index: true,
-        path: "/",
-        Component: Home,
-      },
-      {
-        path: "/login",
-        Component: Login,
-      },
-      {
-        path: "/register",
-        Component: Register,
-      },
-      {
-        path: "/about",
-        Component: About,
-      },
-      {
-        path: "/jobs",
-        loader: () => fetch("http://localhost:3000/alljobs"),
-        Component: Jobs,
-      },
-      {
-        path: '/jobs/:id',
-        loader: ({params}) => fetch(`http://localhost:3000/alljobs/${params.id}`),
-        Component: JobDetails
-      },
-      {
-        path: "/contact",
-        Component: Contact,
-      },
-      {
-        path: "/categories/:id",
-        loader: ({ params }) =>
-          fetch(`http://localhost:3000/categories/${params.id}`),
-        Component: Category,
-      },
-      {
-        path: "/myaddedjobs",
+        path: 'allJobs/:id',
         element: (
           <PrivateRoute>
-            <MyAddedJobs></MyAddedJobs>
+            <JobDetails />
           </PrivateRoute>
         ),
       },
       {
-        path: "/myaccepttasks",
+        path: 'addJob',
         element: (
           <PrivateRoute>
-            <MyAcceptTasks></MyAcceptTasks>
+            <AddJob />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'updateJob/:id',
+        element: (
+          <PrivateRoute>
+            <UpdateJob />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'deleteJob/:id',
+        element: (
+          <PrivateRoute>
+            <DeleteJob />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'myAddedJobs',
+        element: (
+          <PrivateRoute>
+            <MyAddedJobs />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'my-accepted-tasks',
+        element: (
+          <PrivateRoute>
+            <MyAcceptedTasks />
           </PrivateRoute>
         ),
       },
     ],
   },
+  { path: '*', element: <ErrorPage /> },
 ]);

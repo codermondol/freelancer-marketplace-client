@@ -1,17 +1,18 @@
-import React from 'react';
+import { Outlet, ScrollRestoration } from 'react-router';
 import NavBar from '../components/NavBar';
-import Home from '../pages/home/home';
-import { Outlet } from 'react-router';
 import Footer from '../components/Footer';
 
-const root = () => {
-    return (
-        <div>
-            <NavBar></NavBar>
-            <Outlet></Outlet>
-            <Footer></Footer>
-        </div>
-    );
+const Root = () => {
+  return (
+    <div className="flex min-h-screen flex-col bg-app text-app">
+      <NavBar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+      <ScrollRestoration />
+    </div>
+  );
 };
 
-export default root;
+export default Root;

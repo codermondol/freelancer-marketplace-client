@@ -1,14 +1,16 @@
-import React, { use } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-const PrivateRoute = ({children}) => {
-    const {user} = use(AuthContext)
+const PrivateRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
 
-    if(!user){
-        return <Navigate to='/login'></Navigate>
-    }
-    return children;
+  if (loading) return <LoadingSpinner fullscreen />;
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
 };
 
 export default PrivateRoute;

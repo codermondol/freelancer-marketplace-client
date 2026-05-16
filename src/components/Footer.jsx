@@ -1,113 +1,108 @@
-import React from "react";
-import { Link } from "react-router";
+import { Link } from 'react-router';
+import { Briefcase, Mail, MapPin, Phone } from 'lucide-react';
+
+const FacebookIcon = (props) => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M22 12a10 10 0 1 0-11.563 9.875v-6.987H7.9V12h2.537V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.196 2.238.196v2.46h-1.26c-1.243 0-1.63.772-1.63 1.563V12h2.773l-.443 2.888h-2.33v6.987A10.002 10.002 0 0 0 22 12z"/>
+  </svg>
+);
+
+const InstagramIcon = (props) => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const LinkedinIcon = (props) => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M20.447 20.452H16.89v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.852 3.37-1.852 3.602 0 4.268 2.37 4.268 5.455v6.288zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.78 13.019H3.555V9h3.562v11.452z"/>
+  </svg>
+);
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-neutral text-neutral-content">
-      <div className="w-[1440px] max-w-full mx-auto py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
-          {/* Navigation */}
+    <footer className="mt-16 border-t border-app bg-[rgb(var(--fm-surface))]/70 backdrop-blur">
+      <div className="container-fm py-12">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="font-bold text-lg mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              <li><Link to="/" className="text-neutral-content/70 hover:text-neutral-content transition">Home</Link></li>
-              <li><Link to="/jobs" className="text-neutral-content/70 hover:text-neutral-content transition">All Jobs</Link></li>
-              <li><Link to="/about" className="text-neutral-content/70 hover:text-neutral-content transition">About</Link></li>
-              <li><Link to="/contact" className="text-neutral-content/70 hover:text-neutral-content transition">Contact Us</Link></li>
+            <Link to="/" className="flex items-center gap-2.5">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[rgb(var(--fm-primary))] to-[rgb(var(--fm-secondary))] text-white">
+                <Briefcase size={18} />
+              </span>
+              <span className="text-lg font-extrabold tracking-tight">
+                Skill<span className="text-gradient">Forge</span>
+              </span>
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
+              The trusted marketplace where independent talent and ambitious teams meet to build, ship, and grow together.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-app">Explore</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/" className="text-muted transition hover:text-app">Home</Link></li>
+              <li><Link to="/allJobs" className="text-muted transition hover:text-app">All Jobs</Link></li>
+              <li><Link to="/addJob" className="text-muted transition hover:text-app">Post a Job</Link></li>
+              <li><Link to="/my-accepted-tasks" className="text-muted transition hover:text-app">My Accepted Tasks</Link></li>
             </ul>
           </div>
 
-          {/* Important Links */}
           <div>
-            <h3 className="font-bold text-lg mb-4">Important Link</h3>
-            <ul className="space-y-2">
-              <li><Link to="/login" className="text-primary hover:underline transition">Login Now</Link></li>
-              <li><Link to="/myaddedjobs" className="text-primary hover:underline transition">Post a Job</Link></li>
-              <li><Link to="/jobs" className="text-primary hover:underline transition">Find a Job</Link></li>
-              <li><Link to="/myaccepttasks" className="text-primary hover:underline transition">My Accepted Tasks</Link></li>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-app">Company</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="text-muted transition hover:text-app">Privacy Policy</a></li>
+              <li><a href="#" className="text-muted transition hover:text-app">Terms of Service</a></li>
+              <li><a href="#" className="text-muted transition hover:text-app">Trust & Safety</a></li>
+              <li><a href="#" className="text-muted transition hover:text-app">Help Center</a></li>
             </ul>
           </div>
 
-          {/* Terms */}
           <div>
-            <h3 className="font-bold text-lg mb-4">Terms</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-neutral-content/70 hover:text-neutral-content transition">Privacy Policy</a></li>
-              <li><a href="#" className="text-neutral-content/70 hover:text-neutral-content transition">Terms of Service</a></li>
-              <li><a href="#" className="text-neutral-content/70 hover:text-neutral-content transition">Bid Policy</a></li>
-              <li><a href="#" className="text-neutral-content/70 hover:text-neutral-content transition">Cookie Policy</a></li>
-            </ul>
-          </div>
-
-          {/* Contact Us */}
-          <div>
-            <h3 className="font-bold text-lg mb-4">Contact Us</h3>
-            <ul className="space-y-3">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-app">Get in touch</h3>
+            <ul className="space-y-3 text-sm text-muted">
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
-                  <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
-                </svg>
-                <span className="text-neutral-content/70 text-sm">2118 Thornridge Cir. Syracuse, New York</span>
+                <MapPin size={16} className="mt-0.5 shrink-0 text-[rgb(var(--fm-primary))]" />
+                <span>21 Innovation Lane, Dhaka 1207, BD</span>
               </li>
               <li className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                  <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd"/>
-                </svg>
-                <span className="text-neutral-content/70 text-sm">+1-666-0121</span>
+                <Phone size={16} className="shrink-0 text-[rgb(var(--fm-primary))]" />
+                <span>+880 1700 000 000</span>
               </li>
               <li className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/>
-                  <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/>
-                </svg>
-                <span className="text-neutral-content/70 text-sm">freelancerhub@gmail.com</span>
+                <Mail size={16} className="shrink-0 text-[rgb(var(--fm-primary))]" />
+                <a href="mailto:hello@skillforge.app" className="hover:text-app">hello@skillforge.app</a>
               </li>
             </ul>
 
-            {/* Social */}
-            <div className="mt-5">
-              <p className="font-bold mb-3">Follow Us</p>
-              <div className="flex gap-2">
-                {/* Facebook */}
-                <a href="#" className="w-9 h-9 rounded-md bg-neutral-focus flex items-center justify-center hover:bg-primary transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
-                  </svg>
-                </a>
-                {/* X / Twitter */}
-                <a href="#" className="w-9 h-9 rounded-md bg-neutral-focus flex items-center justify-center hover:bg-primary transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L2.058 2.25H8.08l4.261 5.638 5.903-5.638zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                </a>
-                {/* LinkedIn */}
-                <a href="#" className="w-9 h-9 rounded-md bg-neutral-focus flex items-center justify-center hover:bg-primary transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
-                    <circle cx="4" cy="4" r="2"/>
-                  </svg>
-                </a>
-                {/* Instagram */}
-                <a href="#" className="w-9 h-9 rounded-md bg-neutral-focus flex items-center justify-center hover:bg-primary transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                  </svg>
-                </a>
-              </div>
+            <div className="mt-5 flex items-center gap-2">
+              <a aria-label="Facebook" href="#" className="grid h-9 w-9 place-items-center rounded-full border border-app text-muted transition hover:border-[rgb(var(--fm-primary))] hover:text-[rgb(var(--fm-primary))]">
+                <FacebookIcon />
+              </a>
+              <a aria-label="X" href="#" className="grid h-9 w-9 place-items-center rounded-full border border-app text-muted transition hover:border-[rgb(var(--fm-primary))] hover:text-[rgb(var(--fm-primary))]">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L2.058 2.25H8.08l4.261 5.638 5.903-5.638zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              <a aria-label="LinkedIn" href="#" className="grid h-9 w-9 place-items-center rounded-full border border-app text-muted transition hover:border-[rgb(var(--fm-primary))] hover:text-[rgb(var(--fm-primary))]">
+                <LinkedinIcon />
+              </a>
+              <a aria-label="Instagram" href="#" className="grid h-9 w-9 place-items-center rounded-full border border-app text-muted transition hover:border-[rgb(var(--fm-primary))] hover:text-[rgb(var(--fm-primary))]">
+                <InstagramIcon />
+              </a>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Copyright */}
-      <div className="border-t border-neutral-content/10">
-        <div className="w-[1440px] max-w-full mx-auto py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-neutral-content/50">
-          <p>&copy; {new Date().getFullYear()} FreelancerHub. All rights reserved.</p>
-          <p>Built with ❤️ for freelancers worldwide</p>
+      <div className="border-t border-app">
+        <div className="container-fm flex flex-col items-center justify-between gap-2 py-5 text-xs text-muted sm:flex-row">
+          <p>&copy; {year} SkillForge. All rights reserved.</p>
+          <p>Crafted with care for an independent workforce.</p>
         </div>
       </div>
     </footer>

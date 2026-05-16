@@ -1,16 +1,4 @@
-import './App.css'
-
-function App() {
-
-  return (
-    <>
-        <div>
-          <h1>Get started</h1>
-        </div>
-        
-
-    </>
-  )
-}
-
-export default App
+// The application's tree is mounted in src/main.jsx via <RouterProvider />.
+// This file is kept as a no-op for tooling compatibility.
+const App = () => null;
+export default App;
