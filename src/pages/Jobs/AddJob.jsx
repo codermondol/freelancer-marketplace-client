@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
-import { Image as ImageIcon, Loader2, Plus } from 'lucide-react';
-import axiosInstance from '../../lib/axiosInstance';
-import { useAuth } from '../../contexts/AuthContext';
-import jobCategories from './jobCategories';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
+import { Image as ImageIcon, Loader2, Plus } from "lucide-react";
+import axiosInstance from "../../lib/axiosInstance";
+import { useAuth } from "../../contexts/AuthContext";
+import jobCategories from "./jobCategories";
 
 const FALLBACK_PREVIEW =
-  'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=900&q=60&auto=format&fit=crop';
+  "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=900&q=60&auto=format&fit=crop";
 
 const AddJob = () => {
   const { user } = useAuth();
@@ -17,10 +17,10 @@ const AddJob = () => {
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState({
-    title: '',
+    title: "",
     category: jobCategories[0],
-    summary: '',
-    coverImage: '',
+    summary: "",
+    coverImage: "",
   });
 
   const handleChange = (e) =>
@@ -28,17 +28,19 @@ const AddJob = () => {
 
   const mutation = useMutation({
     mutationFn: async (payload) => {
-      const { data } = await axiosInstance.post('/jobs', payload);
+      const { data } = await axiosInstance.post("/jobs", payload);
       return data;
     },
     onSuccess: () => {
-      toast.success('Your job is live on the marketplace!');
-      queryClient.invalidateQueries({ queryKey: ['jobs'] });
-      navigate('/myAddedJobs');
+      toast.success("Your job is live on the marketplace!");
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      navigate("/myAddedJobs");
     },
     onError: (err) => {
       toast.error(
-        err?.response?.data?.message || err?.message || 'Could not create the job.'
+        err?.response?.data?.message ||
+          err?.message ||
+          "Could not create the job.",
       );
     },
   });
@@ -46,7 +48,7 @@ const AddJob = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim() || !form.summary.trim() || !form.coverImage.trim()) {
-      toast.error('Title, summary, and cover image are required.');
+      toast.error("Title, summary, and cover image are required.");
       return;
     }
     mutation.mutate({
@@ -54,7 +56,7 @@ const AddJob = () => {
       category: form.category,
       summary: form.summary.trim(),
       coverImage: form.coverImage.trim(),
-      postedBy: user?.displayName || 'Anonymous',
+      postedBy: user?.displayName || "Anonymous",
       userEmail: user?.email,
     });
   };
@@ -69,7 +71,8 @@ const AddJob = () => {
         <div className="mb-8 text-center">
           <span className="chip-fm">Post a job</span>
           <h1 className="heading-fm mt-3 text-3xl sm:text-4xl">
-            Tell us what needs to be <span className="text-gradient">built</span>
+            Tell us what needs to be{" "}
+            <span className="text-gradient">built</span>
           </h1>
           <p className="mt-2 text-sm text-muted">
             Give freelancers the context they need to send their best proposals.
@@ -79,7 +82,10 @@ const AddJob = () => {
         <div className="card-fm grid grid-cols-1 gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_260px]">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="title" className="mb-1 block text-sm font-semibold">
+              <label
+                htmlFor="title"
+                className="mb-1 block text-sm font-semibold"
+              >
                 Job title
               </label>
               <input
@@ -95,19 +101,23 @@ const AddJob = () => {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-semibold">Posted by</label>
+                <label className="mb-1 block text-sm font-semibold">
+                  Posted by
+                </label>
                 <input
                   type="text"
-                  value={user?.displayName || ''}
+                  value={user?.displayName || ""}
                   readOnly
                   className="input-fm bg-[rgb(var(--fm-bg))]/40"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-semibold">User email</label>
+                <label className="mb-1 block text-sm font-semibold">
+                  User email
+                </label>
                 <input
                   type="email"
-                  value={user?.email || ''}
+                  value={user?.email || ""}
                   readOnly
                   className="input-fm bg-[rgb(var(--fm-bg))]/40"
                 />
@@ -115,7 +125,10 @@ const AddJob = () => {
             </div>
 
             <div>
-              <label htmlFor="category" className="mb-1 block text-sm font-semibold">
+              <label
+                htmlFor="category"
+                className="mb-1 block text-sm font-semibold"
+              >
                 Category
               </label>
               <select
@@ -134,7 +147,10 @@ const AddJob = () => {
             </div>
 
             <div>
-              <label htmlFor="coverImage" className="mb-1 block text-sm font-semibold">
+              <label
+                htmlFor="coverImage"
+                className="mb-1 block text-sm font-semibold"
+              >
                 Cover image URL
               </label>
               <input
@@ -153,7 +169,10 @@ const AddJob = () => {
             </div>
 
             <div>
-              <label htmlFor="summary" className="mb-1 block text-sm font-semibold">
+              <label
+                htmlFor="summary"
+                className="mb-1 block text-sm font-semibold"
+              >
                 Summary
               </label>
               <textarea
@@ -178,7 +197,7 @@ const AddJob = () => {
               ) : (
                 <Plus size={16} />
               )}
-              {mutation.isPending ? 'Posting…' : 'Post the job'}
+              {mutation.isPending ? "Posting…" : "Post the job"}
             </button>
           </form>
 
@@ -204,12 +223,15 @@ const AddJob = () => {
               <div className="space-y-2 p-4">
                 <span className="chip-fm">{form.category}</span>
                 <h4 className="line-clamp-2 text-sm font-bold">
-                  {form.title || 'Your job title appears here'}
+                  {form.title || "Your job title appears here"}
                 </h4>
                 <p className="clamp-3 text-xs text-muted">
-                  {form.summary || 'Your summary will preview live as you type.'}
+                  {form.summary ||
+                    "Your summary will preview live as you type."}
                 </p>
-                <p className="text-xs text-muted">— {user?.displayName || 'You'}</p>
+                <p className="text-xs text-muted">
+                  — {user?.displayName || "You"}
+                </p>
               </div>
             </div>
           </aside>
