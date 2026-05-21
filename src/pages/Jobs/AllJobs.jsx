@@ -48,22 +48,6 @@ const AllJobs = () => {
 
       <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
         <aside className="card-fm h-fit p-5">
-          <div className="mb-5">
-            <label className="mb-1.5 flex items-center gap-2 text-sm font-semibold">
-              <Filter size={16} /> Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="input-fm"
-            >
-              {allCategories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
 
           <div>
             <label className="mb-1.5 flex items-center gap-2 text-sm font-semibold">
